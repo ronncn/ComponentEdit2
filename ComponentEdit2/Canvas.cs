@@ -1,35 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 
 namespace ComponentEdit2
 {
+    [Serializable]
     public partial class Canvas : Panel
     {
-        // canvas half width
-        private static readonly int CW = 120;
+        // 画布类
+        public int test = 1;
+        private static readonly int CW = 120;       //画布外侧宽度
+        private static readonly int CH = 80;        //画布外侧高度
 
-        // canvas half height
-        private static readonly int CH = 80;
+        private Kernel kernel;                      //核心类
 
-        private Kernel kernel;
+        private Size imageSize;                     //画面的尺寸
+        private Size canvasSizeMin;                 //最小的画布尺寸
+        private Size canvasSizeActual;              //实际的画布尺寸
+        private Rectangle rectImageOutLine;         //矩形边框
+        private Rectangle rectImage;                //矩形
 
-        private Size imageSize;
-        private Size canvasSizeMin;
-        private Size canvasSizeActual;
-        private Rectangle rectImageOutLine;
-        private Rectangle rectImage;
-
-        private float Multiple = 1.0f;
-
-        private ToolContext toolContext;
+        private float Multiple = 1.0f;              //画布放大的倍数
+        
+        private Attributes attributes;
+        private ContextMenuStrip componentRightMenu;
+        private IContainer components;
+        private ToolStripMenuItem creatComLib;
+        private ToolStripMenuItem addInterface;
+        private ToolStripMenuItem DeleteComponent;
+        public GridContext gridContext;
 
         public Canvas()
         {
@@ -41,8 +43,11 @@ namespace ComponentEdit2
             base.ResizeRedraw = true;
             base.BorderStyle = BorderStyle.FixedSingle;
             base.AutoScrollMinSize = Size.Empty;
+            this.Dock = DockStyle.Fill;
 
-            InitialValue();
+            InitialValue();             //初始化值
+            InitialProperty();          //初始化属性
+            InitializeComponent();      //初始化元件
         }
 
         public Canvas(Size size)
@@ -55,19 +60,22 @@ namespace ComponentEdit2
             base.ResizeRedraw = true;
             base.BorderStyle = BorderStyle.FixedSingle;
             base.AutoScrollMinSize = Size.Empty;
+            this.Dock = DockStyle.Fill;
 
             InitialValue();
+            InitialProperty();
+            InitializeComponent();
         }
-
-        public GridContext gridContext;
-
+        
+        //初始化配置的值
         private void InitialValue()
         {
+            //画布背景颜色
             this.BackColor = Color.LightGray;
-            this.Dock = DockStyle.Fill;
+            //画布核心的实例化
             kernel = new Kernel(new Size(1024, 768));
+            kernel.CanvasPaint += new Kernel.CanvasPaintEventHandler(Reflesh);//重绘画布
             this.imageSize = kernel.FinalBitmap.Size;
-            this.toolContext = new ToolContext(this);
 
             //这里的参数可以用配置文件进行设置，记住上一次打开的设置
             TransformGrid(GridStyle.Line);
@@ -76,51 +84,164 @@ namespace ComponentEdit2
             WhenImageSizeChanged();
 
         }
+        public Panel Propertys;                 //属性容器
+        private PropertyGrid propertyGrid;      
+        private PropertyItem propertyItem;      
+        //初始化属性
+        private void InitialProperty()
+        {
+            this.attributes = new Attributes();
+            this.propertyGrid = new PropertyGrid();
+            this.propertyGrid.Size = new Size(180, 300);
+            this.propertyGrid.Dock = DockStyle.Top;
+            this.propertyGrid.Visible = true;
+            this.propertyGrid.HelpVisible = false;
+            this.propertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(PropertyGridChanged);
 
+            this.propertyItem = new PropertyItem(kernel);
+            this.propertyItem.Dock = DockStyle.Top;
+            
+            this.Propertys = new Panel();
+            this.Propertys.Dock = DockStyle.Fill;
+
+        }
+        
+        //属性面板改变事件
+        private void PropertyGridChanged(object sender,PropertyValueChangedEventArgs e)
+        {
+            this.kernel.DrawFinalBitmap();
+            base.Invalidate();
+        }
+        
+        //刷新属性
+        private void ReflshProperty()
+        {
+            //最好做到--显示多元件属性
+
+            this.propertyGrid.SelectedObject = null;            //初始化属性面板选择对象为空
+            this.Propertys.Controls.Clear();
+
+            //判断核心类中选中元素是否为空
+            if (this.kernel.Active == null)
+                return;
+
+            this.propertyGrid.SelectedObject = this.kernel.Active.Attdisp;
+            //显示选中元件时的属性
+            if (this.kernel.Active.GetType() == typeof(Component))
+            {
+                Component component = (Component)kernel.Active;
+                List<string> listNetName = new List<string>();
+                this.propertyItem.comboBox_Inf.Items.Clear();
+                this.propertyItem.comboBox_Net.Items.Clear();
+                foreach (Interface inf in component.listInterface)
+                {
+                    this.propertyItem.comboBox_Inf.Items.Add(inf.Name);
+                    if (inf.Network != null)
+                    {
+                        if (!listNetName.Contains(inf.Network.Name))
+                        {
+                            listNetName.Add(inf.Network.Name);
+                        }
+                    }
+                }
+                foreach (string str in listNetName)
+                {
+                    this.propertyItem.comboBox_Net.Items.Add(str);
+                }
+                if (component.listInterface.Count == 0)
+                    this.propertyItem.comboBox_Inf.Text = "(无)";
+                else
+                    this.propertyItem.comboBox_Inf.SelectedIndex = 0;
+
+                if (listNetName.Count == 0)
+                {
+                    this.propertyItem.comboBox_Net.Text = "(无)";
+                }
+                else
+                {
+                    this.propertyItem.comboBox_Net.SelectedIndex = 0;
+                }
+
+                this.Propertys.Controls.Add(propertyItem);
+            }
+            //选中接口显示的属性
+            else if (this.kernel.Active.GetType() == typeof(Interface))
+            {
+
+            }
+            else
+            {
+                //否则就是Network类型
+            }
+            this.Propertys.Controls.Add(this.propertyGrid);
+        }
+        
         private bool dragFlag = false;
-        private Point startPoint;
+        private Point startPoint;               //开始点的坐标
         private Point startAutoScrollPoint;
+        
+        //重绘画布
+        private void Reflesh()
+        {
+            base.Invalidate();
+        }
+
+        //鼠标按下
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            /*
-             * 
-            Rectangle rect = new Rectangle(rectImage.X + AutoScrollPosition.X, rectImage.Y + AutoScrollPosition.Y,
-                                            rectImage.Width,rectImage.Height);
-            if(rect.Contains(e.Location))
-            {
-                kernel.Draws(TransformScreenPoint(e.Location));
-                base.Invalidate();
-            }
-            *
-            * */
-            //cmdManager.ExecuteCommand(new CreatComponentCmd(kernel, TransformScreenPoint(e.Location)));
-            if (CanvasTool.Tool == CanvasToolStyle.Drag || (Control.ModifierKeys & Keys.Alt) == Keys.Alt)
+            startPoint = e.Location;            //开始点赋值为鼠标按下的点的坐标
+            if(CanvasTool.Tool == CanvasToolStyle.Drag)
             {
                 dragFlag = true;
-                startPoint = e.Location;
                 startAutoScrollPoint = this.AutoScrollPosition;
+            }
+            else
+            {
+                this.kernel.Mouse_Down(TransformScreenPoint(e.Location));//执行核心类鼠标按下事件函数
             }
         }
 
+        //鼠标移动
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if(dragFlag)
+            if(CanvasTool.Tool == CanvasToolStyle.Drag)
             {
-                this.AutoScrollPosition = new Point(-(e.X - startPoint.X + startAutoScrollPoint.X),
-                                                    -(e.Y - startPoint.Y + startAutoScrollPoint.Y));
-                //base.Invalidate();
+                if (dragFlag)
+                {
+                    this.AutoScrollPosition = new Point(-(e.X - startPoint.X + startAutoScrollPoint.X),
+                                                        -(e.Y - startPoint.Y + startAutoScrollPoint.Y));
+                }
+            }
+            else
+            {
+                this.kernel.Mouse_Move(TransformScreenPoint(e.Location));
             }
         }
 
+        //鼠标抬起
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
-            dragFlag = false;
+
+            if (CanvasTool.Tool == CanvasToolStyle.Drag)
+            {
+                dragFlag = false;
+            }
+            else
+            {
+                this.kernel.Mouse_Up(TransformScreenPoint(e.Location));
+                if(e.Button == MouseButtons.Right)
+                {
+                    if(this.kernel.Active != null && this.kernel.Active.GetType() == typeof(Component))
+                        this.componentRightMenu.Show(this,e.Location);
+                }
+                this.ReflshProperty();
+            }
         }
-
-
+        
+        //鼠标滚动
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
@@ -137,37 +258,37 @@ namespace ComponentEdit2
             }
         }
 
+        //窗口变换
         protected override void OnResize(EventArgs eventargs)
         {
             base.OnResize(eventargs);
             RecalculateCanvas();
         }
-        LineGridStrategy line = new LineGridStrategy();
+
+        //绘制
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;             //取消抗锯齿
             e.Graphics.TranslateTransform(AutoScrollPosition.X, AutoScrollPosition.Y);
-
-            //dot.Draw(e.Graphics,rectImage);
-            //line.Draw(e.Graphics, rectImage,Multiple);
+            
             gridContext.DrawGrid(e.Graphics,rectImage);
             
             e.Graphics.DrawRectangle(Pens.Gray, rectImageOutLine);
 
             e.Graphics.DrawImage(kernel.FinalBitmap, rectImage);
 
+            if (kernel.IsInTemp)
+            {
+                e.Graphics.DrawImage(kernel.TempBitmap, rectImage);
+            }
+            
             e.Graphics.ResetTransform();
 
             e.Graphics.TranslateTransform(
                 rectImage.Location.X + AutoScrollPosition.X,
                 rectImage.Location.Y + AutoScrollPosition.Y);
-            
-            //if (kernel.IsInSelecting)
-            //{
-            //    kernel.DrawSelectToolSelectingRect(e.Graphics);
-            //}
-
+           
             // draw selected rect
             //if (kernel.SelectedShapesCount > 0)
             //{
@@ -176,7 +297,8 @@ namespace ComponentEdit2
 
             e.Graphics.ResetTransform();
         }
-
+        
+        //重新计算画布
         private void RecalculateCanvas()
         {
             imageSize = new Size((int)(kernel.FinalBitmap.Size.Width * Multiple), (int)(kernel.FinalBitmap.Size.Height * Multiple));
@@ -190,12 +312,14 @@ namespace ComponentEdit2
             rectImageOutLine = new Rectangle(cw - 1, ch - 1, imageSize.Width + 1, imageSize.Height + 1);
         }
 
+        //当画布尺寸改变
         private void WhenImageSizeChanged()
         {
             canvasSizeMin = new Size(imageSize.Width + (int)(CW * Multiple) * 2, imageSize.Height + (int)(CH * Multiple) * 2);
             base.AutoScrollMinSize = canvasSizeMin;
         }
 
+        //变换屏幕坐标
         private Point TransformScreenPoint(Point pos)
         {
             pos.Offset(-rectImage.Location.X - AutoScrollPosition.X,
@@ -205,6 +329,19 @@ namespace ComponentEdit2
             return pos;
         }
 
+        private void creatComLib_Click(object sender, EventArgs e)
+        {
+            Form2 f2 = new Form2(this.kernel.CheckedComponent);
+            f2.Show();
+        }
+        private void addInterface_Click(object sender,EventArgs e)
+        {
+
+        }
+        private void DeleteComponent_Click(object sender,EventArgs e)
+        {
+            this.kernel.Remove();
+        }
         #region Canvas 外部调用的一些方法 
 
         /// <summary>
@@ -252,15 +389,12 @@ namespace ComponentEdit2
             gridContext = new GridContext(gridstyle);
             base.Invalidate();
         }
-
-        CommandManager cmdManager = new CommandManager();
+        
         public void _DragDrop(DragEventArgs e)
         {
-            Component component = new Component();
-            component = (Component)e.Data.GetData(typeof(Component));
+            string path = (string)e.Data.GetData(typeof(string));
             Point ClientPoint = this.PointToClient(new Point(e.X, e.Y));
-            component.DesignProperty.Location = TransformScreenPoint(ClientPoint);
-            cmdManager.ExecuteCommand(new CreatComponentCmd(component));
+            this.kernel.DragDrop(path,TransformScreenPoint(ClientPoint));
             base.Invalidate();
         }
 
@@ -276,6 +410,30 @@ namespace ComponentEdit2
             base.Invalidate();
         }
 
+        public void Remove()
+        {
+            this.kernel.Remove();
+            base.Invalidate();
+        }
+
+        public void Save()
+        {
+            this.kernel.Save();
+        }
+
+        public void Open()
+        {
+            this.kernel.Open();
+            base.Invalidate();
+        }
+
+        public void OpenProperty()
+        {
+            if(this.kernel.Active != null)
+            {
+                this.propertyGrid.SelectedObject = this.kernel.Active.Attdisp;
+            }
+        }
         #endregion
 
         #region 公开的变量
@@ -283,5 +441,49 @@ namespace ComponentEdit2
         //public Kernel Kernel { get { return kernel; } }
 
         #endregion
+
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.componentRightMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.creatComLib = new System.Windows.Forms.ToolStripMenuItem();
+            this.addInterface = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteComponent = new System.Windows.Forms.ToolStripMenuItem();
+            this.componentRightMenu.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // componentRightMenu
+            // 
+            this.componentRightMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.creatComLib,
+            this.addInterface,
+            this.DeleteComponent});
+            this.componentRightMenu.Name = "componentRightMenu";
+            this.componentRightMenu.Size = new System.Drawing.Size(149, 70);
+            // 
+            // creatComLib
+            // 
+            this.creatComLib.Name = "creatComLib";
+            this.creatComLib.Size = new System.Drawing.Size(148, 22);
+            this.creatComLib.Text = "新建元件到库";
+            this.creatComLib.Click += new EventHandler(creatComLib_Click);
+            // 
+            // addInterface
+            // 
+            this.addInterface.Name = "addInterface";
+            this.addInterface.Size = new System.Drawing.Size(148, 22);
+            this.addInterface.Text = "添加接口";
+            this.addInterface.Click += new EventHandler(addInterface_Click);
+            // 
+            // DeleteComponent
+            // 
+            this.DeleteComponent.Name = "DeleteComponent";
+            this.DeleteComponent.Size = new System.Drawing.Size(148, 22);
+            this.DeleteComponent.Text = "删除元件";
+            this.componentRightMenu.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.DeleteComponent.Click += new EventHandler(DeleteComponent_Click);
+
+        }
     }
 }

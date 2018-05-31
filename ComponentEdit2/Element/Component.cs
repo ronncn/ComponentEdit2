@@ -1,36 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace ComponentEdit2
 {
+    [XmlInclude(typeof(Bitmap))]
+    [Serializable]
     public class Component :Element
     {
-        public List<Interface> listInterface;               //该元件的接口列表
-        private List<Component> listChildren;               //子元件的列表
+        public int Width { get { return Size.Width; } set { this.Size = new Size(value, Size.Height); } }
+        public int Height { get { return Size.Height; }set { this.Size = new Size(Size.Width, value); } }
 
+        public Point LeftTopPoint
+        {
+            get
+            {
+                return new Point(Location.X - Width / 2, Location.Y - Height / 2);
+            }
+        }
+
+        public List<Interface> listInterface;               //该元件的接口列表
+        public List<Component> listChildren;                //子元件的列表
+        
         public Component()
         {
             listInterface = new List<Interface>();
             listChildren = new List<Component>();
-            this.DesignProperty = new DesignProperty();     //实例化设计的属性
         }
-
         public override void Display(Graphics g)
         {
-            Bitmap map = new Bitmap(DesignProperty.Width + 10, DesignProperty.Height + 10);
+            Bitmap map;
+            if (listInterface.Count == 0)
+                map = new Bitmap(this.Width, this.Height);
+            else
+                map = new Bitmap(this.Width + 30, this.Height + 30);
             Graphics gBuffer = Graphics.FromImage(map);
             gBuffer.TranslateTransform(map.Width / 2,map.Height / 2);
             gBuffer.Clear(Color.Transparent);
-            Rectangle rect = new Rectangle(new Point(-this.DesignProperty.Width / 2,-this.DesignProperty.Height / 2),
-                new Size(this.DesignProperty.Width,this.DesignProperty.Height));
-            if (DesignProperty.BackImage != null)
+            Rectangle rect = new Rectangle(new Point(-this.Width / 2,-this.Height / 2),
+                new Size(this.Width,this.Height));
+            if (this.Attdisp.backImage != null)
             {
-                gBuffer.DrawImage(DesignProperty.BackImage,rect);
+                gBuffer.DrawImage(this.Attdisp.backImage,rect);
             }
-            else if(!DesignProperty.BackColor.IsEmpty)
+            else if(!this.Attdisp.backColor.IsEmpty)
             {
-                SolidBrush brush = new SolidBrush(DesignProperty.BackColor);
+                SolidBrush brush = new SolidBrush(this.Attdisp.backColor);
                 gBuffer.FillRectangle(brush,rect);
                 Font font = new Font("黑体", 10);
                 StringFormat format = new StringFormat();
@@ -49,7 +66,8 @@ namespace ComponentEdit2
                 gBuffer.DrawString(this.Name, font, Brushes.White, rect, format);
             }
             this.DrawInterface(gBuffer);
-            g.DrawImage(map,this.DesignProperty.Location);
+            g.DrawImage(map, new Point(this.Location.X - map.Width / 2,
+                this.Location.Y - map.Height / 2));
             gBuffer.Dispose();
             map.Dispose();
         }
@@ -57,17 +75,24 @@ namespace ComponentEdit2
         private void DrawInterface(Graphics g)
         {
             //绘制元件上的接口元素
+            if(listInterface.Count == 0)
+            {
+                return;
+            }
+            foreach(Interface inf in listInterface)
+            {
+                inf.Display(g);
+            }
         }
         
-        public override void Move()
+        public override void Move(Point p)
         {
-
+            this.Location = new Point(this.Location.X + p.X,
+                this.Location.Y + p.Y);
         }
 
-        public void AddInf()
+        public void AddInf(Interface inf)
         {
-            Interface inf = new Interface();
-
             listInterface.Add(inf);
         }
 
@@ -85,6 +110,5 @@ namespace ComponentEdit2
         {
             listChildren.Remove(component);
         }
-
     }
 }

@@ -13,7 +13,7 @@ namespace ComponentEdit2
     {
         public FileInfo[] fileCollection;
 
-        private Component _component;
+        private static Component _component;
         private Interface _interface;
 
         public LibraryRead()
@@ -52,15 +52,15 @@ namespace ComponentEdit2
             }
         }
 
-        public Image GetIcon(string file)
+        public Image GetIcon(string lib, string file)
         {
             Image image;
             XElement xele = XElement.Load(file);
             XElement xele1 = xele.Element("backImage");
+            string path2 = Directory.GetCurrentDirectory() + "\\Library\\" + lib + "\\Images";
             if (File.Exists(xele1.Value.Trim()))
             {
                 string path1 = xele1.Value.Trim();
-                string path2 = Directory.GetCurrentDirectory() + "\\Library\\ComponentLibrary\\Images";
                 string destPath = Path.Combine(path2, Path.GetFileName(path1));
                 try
                 {
@@ -88,12 +88,12 @@ namespace ComponentEdit2
             }
             else
             {
-                image = Image.FromFile(Directory.GetCurrentDirectory() + "\\Library\\ComponentLibrary\\Images\\未命名.png");
+                image = Image.FromFile(path2 + "\\未命名.png");
             }
             return image;
         }
 
-        public Component ReadComponentXml(String file)
+        public static void ReadComponentXml(String file,Component component)
         {
             XElement xelement = XElement.Load(file);
 
@@ -103,38 +103,56 @@ namespace ComponentEdit2
             XElement backImage = xelement.Element("backImage");
             XElement backColor = xelement.Element("backColor");
 
-            _component.Name = name.Value.Trim();
-            _component.DesignProperty.Width = Convert.ToInt32(width.Value.Trim());
-            _component.DesignProperty.Height = Convert.ToInt32(height.Value.Trim());
+            component.Name = name.Value.Trim();
+            component.Width = Convert.ToInt32(width.Value.Trim());
+            component.Height = Convert.ToInt32(height.Value.Trim());
             if (backColor.Value != "")
             {
                 string[] strarr = backColor.Value.Split(',');
                 int R = Convert.ToInt32(strarr[0]);
                 int G = Convert.ToInt32(strarr[1]);
                 int B = Convert.ToInt32(strarr[2]);
-                _component.DesignProperty.BackColor = Color.FromArgb(R, G, B);
+                component.Attdisp.backColor = Color.FromArgb(R, G, B);
             }
             if (backImage.Value != "" && File.Exists(backImage.Value.Trim()))
             {
-                _component.DesignProperty.BackImage = Image.FromFile(backImage.Value.Trim());
+                component.Attdisp.backImage = Image.FromFile(backImage.Value.Trim());
             }
             else
             {
-                _component.DesignProperty.BackImage = null;
+                component.Attdisp.backImage = null;
             }
-            //ComponentTemp.componentTemp = _component;
-            return _component;
         }
 
-        public void ReadInterfaceXml(String file)
+        public static void ReadInterfaceXml(String file,Interface inf)
         {
+            XElement xelement = XElement.Load(file);
 
+            XElement name = xelement.Element("name");
+            XElement width = xelement.Element("width");
+            XElement height = xelement.Element("height");
+            XElement backImage = xelement.Element("backImage");
+            XElement backColor = xelement.Element("backColor");
+
+            inf.Name = name.Value.Trim();
+            inf.Width = Convert.ToInt32(width.Value.Trim());
+            inf.Height = Convert.ToInt32(height.Value.Trim());
+            if (backColor.Value != "")
+            {
+                string[] strarr = backColor.Value.Split(',');
+                int R = Convert.ToInt32(strarr[0]);
+                int G = Convert.ToInt32(strarr[1]);
+                int B = Convert.ToInt32(strarr[2]);
+                inf.Attdisp.backColor = Color.FromArgb(R, G, B);
+            }
+            if (backImage.Value != "" && File.Exists(backImage.Value.Trim()))
+            {
+                inf.Attdisp.backImage = Image.FromFile(backImage.Value.Trim());
+            }
+            else
+            {
+                inf.Attdisp.backImage = null;
+            }
         }
     }
-
-    public static class ComponentTemp
-    {
-        public static Component componentTemp;
-    }
-
 }

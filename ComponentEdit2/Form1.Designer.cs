@@ -80,16 +80,13 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.Canvas = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.propertyPanel = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.toolStripTop.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStripLeft.SuspendLayout();
             this.panelLibrary.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.Canvas.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -205,7 +202,7 @@
             // toolStripTop
             // 
             this.toolStripTop.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.toolStripTop.ImageScalingSize = new System.Drawing.Size(18, 18);
+            this.toolStripTop.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.toolStripTop.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.新建ToolStripButton,
             this.打开ToolStripButton,
@@ -224,7 +221,7 @@
             this.删除ToolStripButton});
             this.toolStripTop.Location = new System.Drawing.Point(0, 25);
             this.toolStripTop.Name = "toolStripTop";
-            this.toolStripTop.Size = new System.Drawing.Size(1350, 35);
+            this.toolStripTop.Size = new System.Drawing.Size(1350, 39);
             this.toolStripTop.TabIndex = 1;
             this.toolStripTop.Text = "toolStrip1";
             // 
@@ -235,7 +232,7 @@
             this.新建ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.新建ToolStripButton.Name = "新建ToolStripButton";
             this.新建ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.新建ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.新建ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.新建ToolStripButton.Text = "新建";
             // 
             // 打开ToolStripButton
@@ -245,8 +242,9 @@
             this.打开ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.打开ToolStripButton.Name = "打开ToolStripButton";
             this.打开ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.打开ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.打开ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.打开ToolStripButton.Text = "打开";
+            this.打开ToolStripButton.Click += new System.EventHandler(this.打开ToolStripButton_Click);
             // 
             // 保存ToolStripButton
             // 
@@ -255,14 +253,15 @@
             this.保存ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.保存ToolStripButton.Name = "保存ToolStripButton";
             this.保存ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.保存ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.保存ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.保存ToolStripButton.Text = "保存";
+            this.保存ToolStripButton.Click += new System.EventHandler(this.保存ToolStripButton_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Padding = new System.Windows.Forms.Padding(5);
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 35);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 39);
             // 
             // 撤销ToolStripButton
             // 
@@ -271,7 +270,7 @@
             this.撤销ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.撤销ToolStripButton.Name = "撤销ToolStripButton";
             this.撤销ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.撤销ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.撤销ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.撤销ToolStripButton.Text = "撤销";
             this.撤销ToolStripButton.Click += new System.EventHandler(this.撤销ToolStripButton_Click);
             // 
@@ -282,7 +281,7 @@
             this.恢复ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.恢复ToolStripButton.Name = "恢复ToolStripButton";
             this.恢复ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.恢复ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.恢复ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.恢复ToolStripButton.Text = "恢复";
             this.恢复ToolStripButton.ToolTipText = "恢复";
             this.恢复ToolStripButton.Click += new System.EventHandler(this.恢复ToolStripButton_Click);
@@ -291,7 +290,7 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Padding = new System.Windows.Forms.Padding(5);
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 35);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
             // 
             // 适应尺寸oolStripButton
             // 
@@ -300,7 +299,7 @@
             this.适应尺寸oolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.适应尺寸oolStripButton.Name = "适应尺寸oolStripButton";
             this.适应尺寸oolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.适应尺寸oolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.适应尺寸oolStripButton.Size = new System.Drawing.Size(36, 36);
             this.适应尺寸oolStripButton.Text = "适应尺寸";
             this.适应尺寸oolStripButton.Click += new System.EventHandler(this.适应尺寸oolStripButton_Click);
             // 
@@ -311,7 +310,7 @@
             this.放大ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.放大ToolStripButton.Name = "放大ToolStripButton";
             this.放大ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.放大ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.放大ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.放大ToolStripButton.Text = "放大";
             this.放大ToolStripButton.Click += new System.EventHandler(this.放大ToolStripButton_Click);
             // 
@@ -322,7 +321,7 @@
             this.缩小ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.缩小ToolStripButton.Name = "缩小ToolStripButton";
             this.缩小ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.缩小ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.缩小ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.缩小ToolStripButton.Text = "缩小";
             this.缩小ToolStripButton.Click += new System.EventHandler(this.缩小ToolStripButton_Click);
             // 
@@ -330,7 +329,7 @@
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Padding = new System.Windows.Forms.Padding(5);
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 35);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 39);
             // 
             // 属性ToolStripButton
             // 
@@ -339,9 +338,10 @@
             this.属性ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.属性ToolStripButton.Name = "属性ToolStripButton";
             this.属性ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.属性ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.属性ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.属性ToolStripButton.Text = "属性";
             this.属性ToolStripButton.ToolTipText = "属性";
+            this.属性ToolStripButton.Click += new System.EventHandler(this.属性ToolStripButton_Click);
             // 
             // 网格ToolStripSplitButton
             // 
@@ -354,7 +354,7 @@
             this.网格ToolStripSplitButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.网格ToolStripSplitButton.Name = "网格ToolStripSplitButton";
             this.网格ToolStripSplitButton.Padding = new System.Windows.Forms.Padding(5);
-            this.网格ToolStripSplitButton.Size = new System.Drawing.Size(44, 32);
+            this.网格ToolStripSplitButton.Size = new System.Drawing.Size(48, 36);
             this.网格ToolStripSplitButton.Text = "网格";
             this.网格ToolStripSplitButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.网格ToolStripSplitButton_DropDownItemClicked);
             // 
@@ -362,7 +362,7 @@
             // 
             this.无网格ToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.无网格ToolStripMenuItem.Name = "无网格ToolStripMenuItem";
-            this.无网格ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.无网格ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.无网格ToolStripMenuItem.Tag = "Null";
             this.无网格ToolStripMenuItem.Text = "无网格";
             this.无网格ToolStripMenuItem.Click += new System.EventHandler(this.无网格ToolStripMenuItem_Click);
@@ -370,7 +370,7 @@
             // 点状网格ToolStripMenuItem
             // 
             this.点状网格ToolStripMenuItem.Name = "点状网格ToolStripMenuItem";
-            this.点状网格ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.点状网格ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.点状网格ToolStripMenuItem.Tag = "Dot";
             this.点状网格ToolStripMenuItem.Text = "点状网格";
             this.点状网格ToolStripMenuItem.Click += new System.EventHandler(this.点状网格ToolStripMenuItem_Click);
@@ -379,9 +379,8 @@
             // 
             this.线状网格ToolStripMenuItem.Checked = true;
             this.线状网格ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.线状网格ToolStripMenuItem.Image = global::ComponentEdit2.Properties.Resources.Yes;
             this.线状网格ToolStripMenuItem.Name = "线状网格ToolStripMenuItem";
-            this.线状网格ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.线状网格ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.线状网格ToolStripMenuItem.Tag = "Line";
             this.线状网格ToolStripMenuItem.Text = "线状网格";
             this.线状网格ToolStripMenuItem.Click += new System.EventHandler(this.线状网格ToolStripMenuItem_Click);
@@ -390,7 +389,7 @@
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Padding = new System.Windows.Forms.Padding(5);
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 35);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 39);
             // 
             // 删除ToolStripButton
             // 
@@ -399,8 +398,9 @@
             this.删除ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.删除ToolStripButton.Name = "删除ToolStripButton";
             this.删除ToolStripButton.Padding = new System.Windows.Forms.Padding(5);
-            this.删除ToolStripButton.Size = new System.Drawing.Size(32, 32);
+            this.删除ToolStripButton.Size = new System.Drawing.Size(36, 36);
             this.删除ToolStripButton.Text = "删除";
+            this.删除ToolStripButton.Click += new System.EventHandler(this.删除ToolStripButton_Click);
             // 
             // statusStrip1
             // 
@@ -423,7 +423,7 @@
             // 
             this.toolStripLeft.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.toolStripLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.toolStripLeft.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.toolStripLeft.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStripLeft.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.元件库ToolStripButton,
             this.接口库ToolStripButton,
@@ -433,10 +433,10 @@
             this.抓手ToolStripButton,
             this.文字ToolStripButton});
             this.toolStripLeft.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow;
-            this.toolStripLeft.Location = new System.Drawing.Point(0, 60);
+            this.toolStripLeft.Location = new System.Drawing.Point(0, 64);
             this.toolStripLeft.Name = "toolStripLeft";
             this.toolStripLeft.Padding = new System.Windows.Forms.Padding(0, 0, 0, 1);
-            this.toolStripLeft.Size = new System.Drawing.Size(33, 647);
+            this.toolStripLeft.Size = new System.Drawing.Size(37, 643);
             this.toolStripLeft.TabIndex = 3;
             this.toolStripLeft.Text = "toolStrip2";
             this.toolStripLeft.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripLeft_ItemClicked);
@@ -449,7 +449,7 @@
             this.元件库ToolStripButton.Margin = new System.Windows.Forms.Padding(1, 0, 2, 0);
             this.元件库ToolStripButton.Name = "元件库ToolStripButton";
             this.元件库ToolStripButton.Padding = new System.Windows.Forms.Padding(3);
-            this.元件库ToolStripButton.Size = new System.Drawing.Size(29, 30);
+            this.元件库ToolStripButton.Size = new System.Drawing.Size(33, 34);
             this.元件库ToolStripButton.Tag = "com";
             this.元件库ToolStripButton.Text = "元件库";
             this.元件库ToolStripButton.CheckedChanged += new System.EventHandler(this.库ToolStripButton_CheckedChanged);
@@ -462,7 +462,7 @@
             this.接口库ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.接口库ToolStripButton.Name = "接口库ToolStripButton";
             this.接口库ToolStripButton.Padding = new System.Windows.Forms.Padding(3);
-            this.接口库ToolStripButton.Size = new System.Drawing.Size(32, 30);
+            this.接口库ToolStripButton.Size = new System.Drawing.Size(36, 34);
             this.接口库ToolStripButton.Tag = "inf";
             this.接口库ToolStripButton.Text = "接口库";
             this.接口库ToolStripButton.CheckedChanged += new System.EventHandler(this.库ToolStripButton_CheckedChanged);
@@ -472,7 +472,7 @@
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Padding = new System.Windows.Forms.Padding(3);
-            this.toolStripSeparator4.Size = new System.Drawing.Size(32, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(36, 6);
             // 
             // 选择ToolStripButton
             // 
@@ -483,9 +483,10 @@
             this.选择ToolStripButton.ImageTransparentColor = System.Drawing.SystemColors.ActiveCaption;
             this.选择ToolStripButton.Name = "选择ToolStripButton";
             this.选择ToolStripButton.Padding = new System.Windows.Forms.Padding(3);
-            this.选择ToolStripButton.Size = new System.Drawing.Size(32, 30);
+            this.选择ToolStripButton.Size = new System.Drawing.Size(36, 34);
             this.选择ToolStripButton.Tag = "select";
             this.选择ToolStripButton.Text = "选择";
+            this.选择ToolStripButton.Click += new System.EventHandler(this.选择ToolStripButton_Click);
             // 
             // 连线ToolStripButton
             // 
@@ -494,9 +495,10 @@
             this.连线ToolStripButton.ImageTransparentColor = System.Drawing.SystemColors.ActiveCaption;
             this.连线ToolStripButton.Name = "连线ToolStripButton";
             this.连线ToolStripButton.Padding = new System.Windows.Forms.Padding(3);
-            this.连线ToolStripButton.Size = new System.Drawing.Size(32, 30);
+            this.连线ToolStripButton.Size = new System.Drawing.Size(36, 34);
             this.连线ToolStripButton.Tag = "link";
             this.连线ToolStripButton.Text = "连线";
+            this.连线ToolStripButton.Click += new System.EventHandler(this.连线ToolStripButton_Click);
             // 
             // 抓手ToolStripButton
             // 
@@ -505,7 +507,7 @@
             this.抓手ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.抓手ToolStripButton.Name = "抓手ToolStripButton";
             this.抓手ToolStripButton.Padding = new System.Windows.Forms.Padding(3);
-            this.抓手ToolStripButton.Size = new System.Drawing.Size(32, 30);
+            this.抓手ToolStripButton.Size = new System.Drawing.Size(36, 34);
             this.抓手ToolStripButton.Tag = "move";
             this.抓手ToolStripButton.Text = "抓手";
             this.抓手ToolStripButton.Click += new System.EventHandler(this.抓手ToolStripButton_Click);
@@ -517,9 +519,10 @@
             this.文字ToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.文字ToolStripButton.Name = "文字ToolStripButton";
             this.文字ToolStripButton.Padding = new System.Windows.Forms.Padding(3);
-            this.文字ToolStripButton.Size = new System.Drawing.Size(32, 30);
+            this.文字ToolStripButton.Size = new System.Drawing.Size(36, 34);
             this.文字ToolStripButton.Tag = "text";
             this.文字ToolStripButton.Text = "文字";
+            this.文字ToolStripButton.Click += new System.EventHandler(this.文字ToolStripButton_Click);
             // 
             // panelLibrary
             // 
@@ -527,10 +530,10 @@
             this.panelLibrary.Controls.Add(this.listView1);
             this.panelLibrary.Controls.Add(this.panel1);
             this.panelLibrary.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelLibrary.Location = new System.Drawing.Point(33, 60);
+            this.panelLibrary.Location = new System.Drawing.Point(37, 64);
             this.panelLibrary.Name = "panelLibrary";
             this.panelLibrary.Padding = new System.Windows.Forms.Padding(2);
-            this.panelLibrary.Size = new System.Drawing.Size(210, 647);
+            this.panelLibrary.Size = new System.Drawing.Size(210, 643);
             this.panelLibrary.TabIndex = 4;
             this.panelLibrary.Visible = false;
             // 
@@ -545,7 +548,7 @@
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
             this.listView1.ShowItemToolTips = true;
-            this.listView1.Size = new System.Drawing.Size(206, 621);
+            this.listView1.Size = new System.Drawing.Size(206, 617);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listView1_ItemDrag);
@@ -577,38 +580,25 @@
             // Canvas
             // 
             this.Canvas.AllowDrop = true;
-            this.Canvas.Controls.Add(this.panel2);
             this.Canvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Canvas.Location = new System.Drawing.Point(33, 60);
+            this.Canvas.Location = new System.Drawing.Point(37, 64);
             this.Canvas.Name = "Canvas";
-            this.Canvas.Size = new System.Drawing.Size(1317, 647);
+            this.Canvas.Size = new System.Drawing.Size(1113, 643);
             this.Canvas.TabIndex = 5;
-            this.Canvas.Click += new System.EventHandler(this.panel2_Click);
+            this.Canvas.Click += new System.EventHandler(this.Cool_Close);
             this.Canvas.DragDrop += new System.Windows.Forms.DragEventHandler(this.Canvas_DragDrop);
             this.Canvas.DragEnter += new System.Windows.Forms.DragEventHandler(this.Canvas_DragEnter);
             // 
-            // panel2
+            // propertyPanel
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.panel2.Controls.Add(this.button1);
-            this.panel2.Location = new System.Drawing.Point(1092, 7);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(200, 306);
-            this.panel2.TabIndex = 0;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.Firebrick;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(182, 2);
-            this.button1.Margin = new System.Windows.Forms.Padding(0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(15, 15);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "x";
-            this.button1.UseVisualStyleBackColor = false;
+            this.propertyPanel.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.propertyPanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.propertyPanel.Location = new System.Drawing.Point(1150, 64);
+            this.propertyPanel.Name = "propertyPanel";
+            this.propertyPanel.Padding = new System.Windows.Forms.Padding(2);
+            this.propertyPanel.Size = new System.Drawing.Size(200, 643);
+            this.propertyPanel.TabIndex = 0;
+            this.propertyPanel.Visible = false;
             // 
             // MainForm
             // 
@@ -618,6 +608,7 @@
             this.ClientSize = new System.Drawing.Size(1350, 729);
             this.Controls.Add(this.panelLibrary);
             this.Controls.Add(this.Canvas);
+            this.Controls.Add(this.propertyPanel);
             this.Controls.Add(this.toolStripLeft);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStripTop);
@@ -631,6 +622,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ComponentEdit2";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStripTop.ResumeLayout(false);
@@ -642,8 +635,6 @@
             this.panelLibrary.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.Canvas.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -701,8 +692,7 @@
         private System.Windows.Forms.ImageList imageListLibrary;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel propertyPanel;
     }
 }
 

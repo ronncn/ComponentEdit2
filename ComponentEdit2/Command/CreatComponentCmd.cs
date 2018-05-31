@@ -9,20 +9,28 @@ namespace ComponentEdit2
 {
     public class CreatComponentCmd : Command
     {
-        Component _component;
-        public CreatComponentCmd(Component com)
+        private string path;
+        private Point location;
+        private Kernel kernel;
+        public CreatComponentCmd(Kernel kernel, string path,Point p)
         {
-            this._component = com;
+            this.kernel = kernel;
+            this.path = path;
+            this.location = p;
         }
 
+        Component component;
         public override void Execute()
         {
-
+            component = new Component();
+            LibraryRead.ReadComponentXml(path,component);
+            component.Location = location;
+            kernel.CreatElement(component);
         }
 
         public override void Undo()
         {
-
+            kernel.RemoveElement(component);
         }
     }
 }
